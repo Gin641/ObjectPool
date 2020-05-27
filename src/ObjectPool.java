@@ -11,8 +11,8 @@ public abstract class ObjectPool<T> {
     }
     protected abstract T create();
     public abstract boolean validate(T o);
-    public synchronized T checkOut(T o);
-    public synchronized T check(){
+    public abstract void expire(T o);
+    public synchronized T checkOut(){
         long now = System.currentTimeMillis();
         T t;
         if (unlocked.size() > 0){
@@ -27,7 +27,7 @@ public abstract class ObjectPool<T> {
                     if (validate(t)){
                         unlocked.remove(t);
                         locked.put(t, now);
-                        return (t);
+                        return t;
                     }else {
                         unlocked.remove(t);
                         expire(t);

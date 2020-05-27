@@ -8,36 +8,39 @@ public class JDBCConnectionPool extends ObjectPool<Connection> {
         super();
         try {
             Class.forName(driver).newInstance();
-        }catch (Exception ex){
-            ex.printStackTrace();
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        this.dsn=dsn;
-        this.usr=usr;
-        this.pwd=pwd;
+        this.dsn = dsn;
+        this.usr = usr;
+        this.pwd = pwd;
     }
+
     @Override
-    protected Connection create(){
+    protected Connection create() {
         try {
             return (DriverManager.getConnection(dsn, usr, pwd));
-        } catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             return null;
         }
     }
+
     @Override
-    public boolean validate(Connection o){
+    public boolean validate(Connection o) {
         try {
             return (!((Connection) o).isClosed());
-        } catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
     }
+
     @Override
-    public void expire(Connection o){
+    public void expire(Connection o) {
         try {
-            ((Connection) o).close();
-        }catch (SQLException e){
+            ((Connection)o).isClosed();
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
